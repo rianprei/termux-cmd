@@ -180,7 +180,7 @@ FindFirst(
     // Loop through looking for a file that matching attributes
     //
     *phandle = FindFirstFile(fspec, pffBuf);
-    while (*phandle != (HANDLE)     -1) {
+    while (*phandle != INVALID_HANDLE_VALUE) {
         if (fctAttribMatch(pffBuf, attr)) {
             DosErr = 0;
             rcode = TRUE;

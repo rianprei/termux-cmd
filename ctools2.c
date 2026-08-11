@@ -871,8 +871,17 @@ Cdup( CRTHANDLE fh )
  */
 
 // _Cdup2: dup2 de fds numericos com mapeamento de erro
-static int _Cdup2(int oldfd, int newfd)
+static int _Cdup2(CRTHANDLE fh1, CRTHANDLE fh2)
 {
+	int oldfd, newfd;
+
+	oldfd = ((long)fh1 <= 9) ? (int)(long)fh1 : fileno((FILE *)fh1);
+	newfd = ((long)fh2 <= 9) ? (int)(long)fh2 : fileno((FILE *)fh2);
+
+	if (oldfd < 0 || newfd < 0)
+		return -1;
+	if (oldfd == newfd)
+		return newfd;
 	return dup2(oldfd, newfd);
 }
 
@@ -884,7 +893,7 @@ Cdup2( CRTHANDLE fh1, CRTHANDLE fh2)
         int cnt = 0 ;
         unsigned int fuse ;
 
-        if( _Cdup2((int)(long)fh1,(int)(long)fh2) != -1 ) {
+        if( _Cdup2(fh1,fh2) != -1 ) {
                 if ((fuse = (unsigned)(long)fh2) > (unsigned)(long)STDERR && fuse < 95) {
                         while (fuse > 31) {
                                 fuse -= 32 ;
@@ -897,7 +906,7 @@ Cdup2( CRTHANDLE fh1, CRTHANDLE fh2)
                         SetList(fh2) ;
         }
 
-        if( _Cdup2((int)(long)fh1,(int)(long)fh2) == -1 ) return NULL;
+        if( _Cdup2(fh1,fh2) == -1 ) return NULL;
         return fh2;
 }
 
@@ -933,6 +942,12 @@ CRTHANDLE fh ;
            int ret_val;
 
            if (fh == BADHANDLE)
+             return(0);
+
+           /* No port: stdin/stdout/stderr sao FILE* globais do C runtime.
+            * Fechar aqui deixaria o fd 0/1/2 dangling; o redir real
+            * acontece via dup2() em Cdup2(). */
+           if (fh == stdin || fh == stdout || fh == stderr)
              return(0);
 
            if ((fuse = (unsigned)(long)fh) > (unsigned)(long)STDERR && fuse < 95)

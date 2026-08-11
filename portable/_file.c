@@ -1,6 +1,7 @@
 #include "cmd.h"
 
 #include <unistd.h>
+#include <fcntl.h>
 #include <assert.h>
 #include <libgen.h>
 #include <sys/statvfs.h>
@@ -40,7 +41,8 @@ GetFileAttributes(LPCTSTR lpFileName)
   int ret = stat(unix_path, &st);
   free(unix_path);
 	if(ret != 0) {
-    return SetLastErrno();
+    SetLastErrno();
+    return INVALID_FILE_ATTRIBUTES;
 	}
 	return ChangeFileAttributes(st);
 }
@@ -92,7 +94,7 @@ BOOL WINAPI MoveFile(
 ) {
   char *unix_existing = DOSPath2UNIXPath(lpExistingFileName);
   char *unix_new = DOSPath2UNIXPath(lpNewFileName);
-	BOOL ret = ! rename(lpExistingFileName, lpNewFileName);
+	BOOL ret = ! rename(unix_existing, unix_new);
   if( ! ret ) {
     SetLastErrno();
   }
@@ -235,14 +237,25 @@ FILE *_dup2( FILE *oldfp, FILE *newfp )
 FILE* fdup(FILE* fp,char*mode)
 {
 	int fd;
+	FILE *f;
 	if(fp==NULL)return NULL;
 	fd=dup(fileno(fp));
-	return fdopen(fd,mode);
+	if(fd<0)return NULL;
+	if(mode && *mode) f=fdopen(fd,mode);
+	else f=NULL;
+	if(!f) {
+		int fl = fcntl(fd, F_GETFL);
+		if(fl<0) { close(fd); return NULL; }
+		mode = ((fl & O_ACCMODE) == O_WRONLY) ? "ab" : (((fl & O_ACCMODE) == O_RDONLY) ? "rb" : "r+b");
+		f = fdopen(fd, mode);
+		if(!f) { close(fd); return NULL; }
+	}
+	return f;
 }
 
 
 FILE *_dup( FILE *handle ) {
-	return fdup(handle, "rwb");
+	return fdup(handle, NULL);
 }
 
 // https://github.com/MathewWi/wiiapple/blob/edcab3f1d6e4c007ebfb4856071df4eee1838aaf/wiiapple/source/wwrapper.cpp
@@ -361,7 +374,37 @@ DWORD WINAPI GetFullPathName(
 		ret = strlen(lpBuffer);
 	}
   else {
-    SetLastErrno();
+    // Path may not exist yet (e.g. target of a create/rename).
+    // Resolve the parent directory and append the basename.
+    char *slash = strrchr(unix_path, '/');
+    char *base = unix_path;
+    char parent[PATH_MAX];
+    if (slash && slash != unix_path) {
+        *slash = 0;
+        base = slash + 1;
+        strncpy(parent, unix_path, PATH_MAX - 1);
+        parent[PATH_MAX - 1] = 0;
+    } else {
+        strncpy(parent, ".", PATH_MAX - 1);
+        parent[PATH_MAX - 1] = 0;
+    }
+    if (realpath(parent, resolved_path)) {
+        strcat(resolved_path, "/");
+        strcat(resolved_path, base);
+        if (extra_filename) {
+            strcat(resolved_path, "/");
+            strcat(resolved_path, extra_filename);
+        }
+        char *dos_path = UNIXPath2DOSPath(resolved_path);
+        strncpy(lpBuffer, dos_path, nBufferLength);
+        free(dos_path);
+        if (lpFilePart) {
+            *lpFilePart = DOSBasename(lpBuffer);
+        }
+        ret = strlen(lpBuffer);
+    } else {
+        SetLastErrno();
+    }
   }
   free(tmp_dos_path);
   free(unix_path);
@@ -415,7 +458,7 @@ UINT WINAPI GetWindowsDirectory(
 BOOL WINAPI RemoveDirectory(
   _In_ LPCTSTR lpPathName
 ) {
-	return ! unlink(lpPathName);
+	return ! rmdir(lpPathName);
 }
 
 UINT WINAPI GetDriveType(

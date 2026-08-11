@@ -10,7 +10,34 @@ extern char **environ;
 
 // https://msdn.microsoft.com/en-us/library/windows/desktop/ms683187(v=vs.85).aspx
 LPTCH WINAPI GetEnvironmentStrings(void) {
-  return (LPTCH)environ; // XXX: implement this properly
+  static char *g_envblock = NULL;
+  static size_t g_envblock_size = 0;
+  size_t total = 0;
+  int i;
+  char *p;
+
+  for (i = 0; environ[i]; i++) {
+    total += strlen(environ[i]) + 1;
+  }
+  total += 1;
+
+  if (g_envblock_size < total) {
+    char *nb = realloc(g_envblock, total);
+    if (nb == NULL) {
+      return NULL;
+    }
+    g_envblock = nb;
+    g_envblock_size = total;
+  }
+
+  p = g_envblock;
+  for (i = 0; environ[i]; i++) {
+    size_t len = strlen(environ[i]) + 1;
+    memcpy(p, environ[i], len);
+    p += len;
+  }
+  *p = 0;
+  return g_envblock;
 }
 
 DWORD WINAPI GetEnvironmentVariable(

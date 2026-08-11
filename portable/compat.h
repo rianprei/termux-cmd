@@ -867,7 +867,7 @@ static inline DWORD GetFileType(HANDLE h) {
     if (fd >= 0) {
         if (isatty(fd)) return FILE_TYPE_CHAR;
         struct stat st;
-        if (fstat(fd, &st) == 0 && S_ISFIFO(st.st_mode)) return FILE_TYPE_PIPE;
+        if (fstat(fd, &st) == 0 && (S_ISFIFO(st.st_mode) || S_ISSOCK(st.st_mode))) return FILE_TYPE_PIPE;
     }
     return FILE_TYPE_DISK;
 }

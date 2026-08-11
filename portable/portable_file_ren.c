@@ -1,6 +1,7 @@
 #include "cmd.h"
 
 #include <unistd.h>
+#include <fcntl.h>
 #include <assert.h>
 #include <libgen.h>
 #include <sys/statvfs.h>
@@ -254,14 +255,25 @@ FILE *_dup2( FILE *oldfp, FILE *newfp )
 FILE* fdup(FILE* fp,char*mode)
 {
 	int fd;
+	FILE *f;
 	if(fp==NULL)return NULL;
 	fd=dup(fileno(fp));
-	return fdopen(fd,mode);
+	if(fd<0)return NULL;
+	if(mode && *mode) f=fdopen(fd,mode);
+	else f=NULL;
+	if(!f) {
+		int fl = fcntl(fd, F_GETFL);
+		if(fl<0) { close(fd); return NULL; }
+		mode = ((fl & O_ACCMODE) == O_WRONLY) ? "ab" : (((fl & O_ACCMODE) == O_RDONLY) ? "rb" : "r+b");
+		f = fdopen(fd, mode);
+		if(!f) { close(fd); return NULL; }
+	}
+	return f;
 }
 
 
 FILE *_dup( FILE *handle ) {
-	return fdup(handle, "rwb");
+	return fdup(handle, NULL);
 }
 
 // https://github.com/MathewWi/wiiapple/blob/edcab3f1d6e4c007ebfb4856071df4eee1838aaf/wiiapple/source/wwrapper.cpp
