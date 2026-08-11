@@ -23,7 +23,7 @@ Thank you for your interest in contributing! This document outlines the process 
 ### Development Setup
 
 ```bash
-git clone https://github.com/yourusername/termux-cmd.git
+git clone https://github.com/rianprei/termux-cmd.git
 cd termux-cmd
 make clean && make
 ./cmd.exe  # test it works

@@ -2,10 +2,10 @@
 
 > **Native Windows CMD (Server 2003) ported to Termux** — Zero dependencies, zero emulation, pure ELF ARM64.
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/yourusername/termux-cmd/actions)
+[![Build Status](https://img.shields.io/badge/build-passing-brightgreen)](https://github.com/rianprei/termux-cmd/actions)
 [![Platform](https://img.shields.io/badge/platform-Termux%20(ARM64)-blue)](https://termux.dev)
 [![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
-[![Version](https://img.shields.io/badge/version-1.0.0-orange)](https://github.com/yourusername/termux-cmd/releases)
+[![Version](https://img.shields.io/badge/version-1.0.0-orange)](https://github.com/rianprei/termux-cmd/releases)
 
 ---
 
@@ -62,7 +62,7 @@ pkg install clang make git
 
 ```bash
 # Download latest release
-curl -L -o cmd https://github.com/yourusername/termux-cmd/releases/latest/download/cmd-arm64
+curl -L -o cmd https://github.com/rianprei/termux-cmd/releases/latest/download/cmd-arm64
 chmod +x cmd
 mv cmd $PREFIX/bin/cmd
 ```
@@ -70,7 +70,7 @@ mv cmd $PREFIX/bin/cmd
 ### Build from Source
 
 ```bash
-git clone https://github.com/yourusername/termux-cmd.git
+git clone https://github.com/rianprei/termux-cmd.git
 cd termux-cmd
 make clean && make
 cp cmd.exe $PREFIX/bin/cmd
@@ -293,9 +293,9 @@ This project is based on **Microsoft Windows Server 2003 `cmd.exe` source code**
 
 ## 📞 Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/termux-cmd/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/yourusername/termux-cmd/discussions)
-- **Security**: Email security@yourusername.com
+- **Issues**: [GitHub Issues](https://github.com/rianprei/termux-cmd/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/rianprei/termux-cmd/discussions)
+- **Security**: Email security@rianprei.com
 
 ---
 

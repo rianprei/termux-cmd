@@ -168,7 +168,7 @@ gdb ./cmd.exe
 
 ## Getting Help
 
-1. **Search existing issues** — [GitHub Issues](https://github.com/yourusername/termux-cmd/issues)
+1. **Search existing issues** — [GitHub Issues](https://github.com/rianprei/termux-cmd/issues)
 2. **Run with debug** — `make DEBUG=1 && ./cmd.exe /c "cmd" 2>&1`
 3. **Include in report**:
    - `uname -a`

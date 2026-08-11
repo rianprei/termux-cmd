@@ -16,7 +16,7 @@ pkg update && pkg upgrade -y
 pkg install clang make git
 
 # Clone and build
-git clone https://github.com/yourusername/termux-cmd.git
+git clone https://github.com/rianprei/termux-cmd.git
 cd termux-cmd
 make clean && make
 
@@ -106,6 +106,6 @@ make clean && make CC=$CC
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/yourusername/termux-cmd/issues)
+- **Issues**: [GitHub Issues](https://github.com/rianprei/termux-cmd/issues)
 - **Build Logs**: Include full `make` output
 - **Environment**: `uname -a`, `pkg list-installed`, `clang --version`
