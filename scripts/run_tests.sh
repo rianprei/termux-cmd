@@ -15,12 +15,12 @@ run_test() {
     echo -n "Testing $name... "
     if eval "$CMD /c \"$cmd\"" 2>&1 | grep -q "$expected"; then
         echo "✅ PASS"
-        ((PASS++))
+        ((PASS++)) || true
     else
         echo "❌ FAIL"
         echo "  Command: $cmd"
         echo "  Expected: $expected"
-        ((FAIL++))
+        ((FAIL++)) || true
     fi
 }
 

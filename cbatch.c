@@ -1012,9 +1012,6 @@ int flg;               /* M019 - New flag argument                */
 {
     TCHAR *eqstr = TEXT("");
 
-    void DisplayOperator(),
-    DisplayRedirection();     /* M008 - Made void                */
-
 /*  M019 - Added extra conditionals to determine whether or not to display
  *         any part of the tree that following a SILent node.  This is done
  *         based on a new flag argument which indicates SILENT or VERBOSE
@@ -1211,8 +1208,6 @@ struct node *n;
 TCHAR *opstr;
 {
 
-    void DisplayStatement();       /* M008 - made void                */
-
     DEBUG((BPGRP, BPLVL, "DOP"));
 
     DisplayStatement(n->lhs, DSP_SIL);                     /* M019    */
@@ -1291,7 +1286,6 @@ CRTHANDLE OpenPosBat(bdat)
 struct batdata *bdat;
 {
     CRTHANDLE fh;          /* Batch file handle               */
-    int DriveIsFixed();
 
     DEBUG((BPGRP, BPLVL, "OPB: fspec = %ws", bdat->filespec));
 
@@ -2442,7 +2436,6 @@ int FLoopWork(
 int FWork(struct node *n, BOOL bFirstLoop)
 {
     int forretcode;                /* Dispatch Retcode or FORERROR    */
-    void DisplayStatement();       /* M008 - made void                */
 
     DEBUG((BPGRP, FOLVL, "FW: Entered; Substituting variable"));
 
@@ -3828,7 +3821,7 @@ void ElclWork( struct batdata *bdat )
 int eCall(n)
 struct cmdnode *n;
 {
-    int CallWork();
+    int CallWork(TCHAR *fname);
 
     return(LastRetCode = CallWork(n->argptr)); /* @@ */
 }

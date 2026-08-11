@@ -795,7 +795,7 @@ void InitEnv( void )
     OriginalEnvironment = CopyEnv();
 }
 
-LPWSTR GetCapturedEnvironmentStrings( struct envdata *Environment )
+LPTSTR GetCapturedEnvironmentStrings( struct envdata *Environment )
 {
     return Environment->Strings;
 }

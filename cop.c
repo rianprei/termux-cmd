@@ -235,7 +235,7 @@ struct node *n ;
     //  Create a pipe with a read handle and a write handle
     //
 
-    if (_pipe((int *)Pd, 0, O_BINARY)) {
+    if (_pipe((FILE **)Pd, 0, O_BINARY)) {
 
         DEBUG((OPGRP,PILVL,"PIPES:pipe failed!")) ;
 

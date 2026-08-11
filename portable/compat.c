@@ -89,8 +89,9 @@ void WINAPI DebugBreak(void) {
 }
 
 // http://www.codeproject.com/Articles/10563/Windows-version-requirements-macros
+// Windows Server 2003 SP1: major=5, minor=2, build=3790, VER_NT=0x80000000
 DWORD WINAPI GetVersion(void) {
-  return 0xc0000004;
+  return 0x80000000UL | (5UL) | (2UL << 8) | (3790UL << 16);
 }
 
 

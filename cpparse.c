@@ -281,7 +281,7 @@ found_file(
     int *all_sources_wild,
     int mode)
 {
-    PCPYINFO add_filespec_to_struct();
+
 
     /*  if it's a source, add to the list of source structures  */
     if ((parse_state == SEEN_NO_FILES) ||

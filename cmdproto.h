@@ -117,7 +117,7 @@ TCHAR *FindEnvVar(TCHAR *,TCHAR *);
 int AddEnvVar(struct envdata   *,TCHAR *,TCHAR *,TCHAR *,int );
 PTCHAR GetEnvVar(PTCHAR);
 
-LPWSTR GetCapturedEnvironmentStrings( struct envdata *Environment );
+LPTSTR GetCapturedEnvironmentStrings( struct envdata *Environment );
 void InitEnv( void );
 struct envdata   *CopyEnv(void );
 void ResetEnv(struct envdata   *);
@@ -583,7 +583,7 @@ __inline
 VOID WINAPI
 CmdSetThreadUILanguage( WORD wReserved )
 {
-    static LANGID (WINAPI *pSetThreadUILanguage)(  ) = NULL;
+    static LANGID (WINAPI *pSetThreadUILanguage)( WORD ) = NULL;
 
     if (pSetThreadUILanguage == NULL) {
         // This check has to put in because hKernel32 may not have been 

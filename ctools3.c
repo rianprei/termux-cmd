@@ -164,7 +164,7 @@ int FileIsDevice( CRTHANDLE fh )
             return FALSE;
         }
     */
-    if( fh == STDIN && FileIsConsole(fh) ) {
+    if( (fh == STDIN || fh == STDOUT || fh == STDERR) && FileIsConsole(fh) ) {
         flgwd = 1;
         return TRUE;
     }
@@ -173,15 +173,12 @@ int FileIsDevice( CRTHANDLE fh )
 
 int FileIsPipe( CRTHANDLE fh )
 {
-    /*
-        unsigned htype ;
+    unsigned htype ;
 
-        htype = GetFileType( CRTTONT(fh) );
-        htype &= ~FILE_TYPE_REMOTE;
-        flgwd = 0;
-        return( htype == FILE_TYPE_PIPE ) ; // @@4
-    */
-    return FALSE;
+    htype = GetFileType( fh );
+    htype &= ~FILE_TYPE_REMOTE;
+    flgwd = 0;
+    return( htype == FILE_TYPE_PIPE ) ;
 }
 
 int FileIsRemote( LPTSTR FileName )

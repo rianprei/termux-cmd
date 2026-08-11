@@ -51,20 +51,20 @@ struct ocentry {
  */
 
 int eBreak(struct cmdnode *n);
-int eDirectory(), eRename(), eDelete(), eType(), eCopy(), ePause() ;
-int eTime(), eVersion(), eVolume(), eChdir(), eMkdir(), eRmdir() ;
-int eVerify(), eSet(), ePrompt(), ePath(), eExit(), eEcho() ;
-int eGoto(), eShift(), eIf(), eFor(), eCls(), eComSep(), eOr(), eAnd() ;
-int ePipe(), eParen(), eDate(), eErrorLevel(), eCmdExtVer(), eDefined() ;
-int eExist(), eNot(), eStrCmp(), eSetlocal(), eEndlocal() ;     /* M000 */
-int eCall() ;                                   /* M001 - Added this one   */
-int eExtproc() ;                                /* M002 - Added this one   */
-int eTitle();
-int eStart() ;       /* START @@*/
-int eAppend() ;     /* APPEND @@ */
-int eKeys() ;       /* KEYS @@5 */
-int eMove() ;       /* MOVE @@5 */
-int eSpecialHelp();
+int eDirectory(struct cmdnode *n), eRename(struct cmdnode *n), eDelete(struct cmdnode *n), eType(struct cmdnode *n), eCopy(struct cmdnode *n), ePause(struct cmdnode *n) ;
+int eTime(struct cmdnode *n), eVersion(struct cmdnode *n), eVolume(struct cmdnode *n), eChdir(struct cmdnode *n), eMkdir(struct cmdnode *n), eRmdir(struct cmdnode *n) ;
+int eVerify(struct cmdnode *n), eSet(struct cmdnode *n), ePrompt(struct cmdnode *n), ePath(struct cmdnode *n), eExit(struct cmdnode *n), eEcho(struct cmdnode *n) ;
+int eGoto(struct cmdnode *n), eShift(struct cmdnode *n), eIf(struct ifnode *n), eFor(struct fornode *n), eCls(struct cmdnode *n), eComSep(struct node *n), eOr(struct node *n), eAnd(struct node *n) ;
+int ePipe(struct node *n), eParen(struct node *n), eDate(struct cmdnode *n), eErrorLevel(struct cmdnode *n), eCmdExtVer(struct cmdnode *n), eDefined(struct cmdnode *n) ;
+int eExist(struct cmdnode *n), eNot(struct cmdnode *n), eStrCmp(struct cmdnode *n), eSetlocal(struct cmdnode *n), eEndlocal(struct cmdnode *n) ;     /* M000 */
+int eCall(struct cmdnode *n) ;                                   /* M001 - Added this one   */
+int eExtproc(struct cmdnode *n) ;                                /* M002 - Added this one   */
+int eTitle(struct cmdnode *n);
+int eStart(struct cmdnode *n) ;       /* START @@*/
+int eAppend(struct cmdnode *n) ;     /* APPEND @@ */
+int eKeys(struct cmdnode *n) ;       /* KEYS @@5 */
+int eMove(struct cmdnode *n) ;       /* MOVE @@5 */
+int eSpecialHelp(struct cmdnode *n);
 int eColor(struct cmdnode *);
 
 

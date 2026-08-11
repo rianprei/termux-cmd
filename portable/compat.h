@@ -15,6 +15,7 @@
 #include <stddef.h>
 #include <sys/stat.h>
 #include <string.h>
+#include <time.h>
 
 #define WIN95_CMD
 #define PORTABLE_CMD
@@ -295,12 +296,12 @@ static inline BOOL MoveFileEx(LPCTSTR lpExistingFileName, LPCTSTR lpNewFileName,
 }
 
 /* decl movida */
+BOOL CreateProcess(LPCTSTR lpApplicationName, LPTSTR lpCommandLine, LPVOID lpProcessAttributes, LPVOID lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment, LPCTSTR lpCurrentDirectory, LPSTARTUPINFO lpStartupInfo, LPPROCESS_INFORMATION lpProcessInformation);
 static inline BOOL CreateProcessAsUser(HANDLE hToken, LPCTSTR lpApplicationName, LPTSTR lpCommandLine,
     LPSECURITY_ATTRIBUTES lpProcessAttributes, LPSECURITY_ATTRIBUTES lpThreadAttributes,
     BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment,
     LPCTSTR lpCurrentDirectory, LPSTARTUPINFO lpStartupInfo, LPPROCESS_INFORMATION lpProcessInformation) {
     (void)hToken; (void)lpProcessAttributes; (void)lpThreadAttributes; (void)bInheritHandles;
-BOOL CreateProcess(LPCTSTR lpApplicationName, LPTSTR lpCommandLine, LPVOID lpProcessAttributes, LPVOID lpThreadAttributes, BOOL bInheritHandles, DWORD dwCreationFlags, LPVOID lpEnvironment, LPCTSTR lpCurrentDirectory, LPSTARTUPINFO lpStartupInfo, LPPROCESS_INFORMATION lpProcessInformation);
     (void)dwCreationFlags; (void)lpEnvironment; (void)lpCurrentDirectory;
     return CreateProcess(lpApplicationName, lpCommandLine, NULL, NULL, bInheritHandles,
         dwCreationFlags, lpEnvironment, lpCurrentDirectory, lpStartupInfo, lpProcessInformation);
@@ -854,7 +855,21 @@ typedef HANDLE SAFER_LEVEL_HANDLE;
 #define FILE_TYPE_CHAR     0x0002
 #define FILE_TYPE_PIPE     0x0003
 static inline DWORD GetFileType(HANDLE h) {
-    return isatty((int)(long)h) ? FILE_TYPE_CHAR : FILE_TYPE_DISK;
+    int fd = -1;
+    if (h != NULL) {
+        if (h == (HANDLE)STDIN_FILENO || h == (HANDLE)STDOUT_FILENO || h == (HANDLE)STDERR_FILENO) {
+            fd = (int)(long)h;
+        } else if ((long)h > 2) {
+            FILE *f = (FILE *)h;
+            fd = fileno(f);
+        }
+    }
+    if (fd >= 0) {
+        if (isatty(fd)) return FILE_TYPE_CHAR;
+        struct stat st;
+        if (fstat(fd, &st) == 0 && S_ISFIFO(st.st_mode)) return FILE_TYPE_PIPE;
+    }
+    return FILE_TYPE_DISK;
 }
 static inline void MessageBeep(UINT u) { (void)u; }
 static inline BOOLEAN IsDBCSCodePage(void) { return FALSE; }
@@ -898,7 +913,7 @@ static inline struct tm *SysTimeToTm(LPVOID lpSys, struct tm *tm_out) {
     time_t now = time(NULL);
     return localtime_r(&now, tm_out);
 }
-static inline int GetTimeFormat(LCID lcid, DWORD dwFlags, LPVOID lpSys, LPCWSTR fmt, LPTSTR buf, int cch) {
+static inline int GetTimeFormat(LCID lcid, DWORD dwFlags, LPVOID lpSys, LPCTSTR fmt, LPTSTR buf, int cch) {
     struct tm tm_out;
     struct tm *lt = SysTimeToTm(lpSys, &tm_out);
     char fmt_buf[128];
@@ -916,7 +931,7 @@ static inline int GetTimeFormat(LCID lcid, DWORD dwFlags, LPVOID lpSys, LPCWSTR 
     strftime(buf, cch, fmt_buf, lt);
     return (int)strlen(buf);
 }
-static inline int GetDateFormat(LCID lcid, DWORD dwFlags, LPVOID lpSys, LPCWSTR fmt, LPTSTR buf, int cch) {
+static inline int GetDateFormat(LCID lcid, DWORD dwFlags, LPVOID lpSys, LPCTSTR fmt, LPTSTR buf, int cch) {
     struct tm tm_out;
     struct tm *lt = SysTimeToTm(lpSys, &tm_out);
     char fmt_buf[128];

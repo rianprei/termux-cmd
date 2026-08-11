@@ -37,10 +37,8 @@ extern BOOL CtrlCSeen;
 extern PTCHAR    pszTitleCur;
 extern BOOLEAN  fTitleChanged;
 
-//
 // Internal prototypes
-//
-PCPYINFO SetFsSetSaveDir() ;
+// (SetFsSetSaveDir, DelWork, RenWork: prototipos em cmdproto.h)
 
 /***    ErrorDisplayAndJumnp - handle errors
  *
@@ -219,8 +217,6 @@ struct cmdnode *n ;
 int eDelete(n)
 struct cmdnode *n ;
 {
-    int DelWork() ;
-
     return(LastRetCode = DelWork(n->argptr));
 }
 
@@ -265,8 +261,6 @@ struct cmdnode *n ;
 int eRename(n)
 struct cmdnode *n ;
 {
-    int RenWork();                           /* @@ */
-
     return(LastRetCode = RenWork( n ));      /* @@ */
 }
 
@@ -327,7 +321,6 @@ struct cmdnode *n ;
     TCHAR *arg1 ;                          /* Ptr to 1st arg          */
     TCHAR *arg2 ;                          /* Ptr to 2nd arg          */
     PCPYINFO a1info ;                       /* Holds arg1 fspec info   */
-    PCPYINFO SetFsSetSaveDir();
     TCHAR Source[MAX_PATH];
     TCHAR bufdst[MAX_PATH];                        /* path of destination file*/
     TCHAR Replacement[MAX_PATH];
@@ -654,7 +647,7 @@ unsigned int *is_dest_dir;       /* to pass to move                       */
 unsigned sizpath1;               /* size of source buffer                 */
 unsigned sizpath2;               /* size of target buffer                 */
 
-{       PCPYINFO SetFsSetSaveDir() ;
+{       
     TCHAR *arg1 ;                   /* Ptr to 1st arg          */
     TCHAR *arg2 ;                   /* Ptr to 2nd arg          */
     TCHAR *p1;

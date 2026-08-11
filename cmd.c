@@ -105,12 +105,6 @@ extern BOOLEAN  fTitleChanged;
 //
 
 
-PTCHAR
-GetEnvVar();
-
-PTCHAR
-EatWS();
-
 int
 UnParse(struct node   *, PTCHAR);
 
@@ -122,9 +116,6 @@ UnDuRd(struct node   *, PTCHAR);
 
 void
 SPutC(PTCHAR, PTCHAR,int );
-
-PTCHAR
-argstr1();
 
 int DelayedEnvVarSub(struct cmdnode *, struct savtype *, BOOLEAN);
 int DESubWork(BOOLEAN, TCHAR **, TCHAR **);

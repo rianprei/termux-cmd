@@ -290,7 +290,7 @@ int fsarg ;
 {
     struct node *n ;       /* Root of the parse tree */
     INT_PTR retcode ;      /* setjmp()'s return code */
-    unsigned GeToken() ;
+
 
     DEBUG((PAGRP, PALVL, "PARSER: Entered.")) ;
 
@@ -409,7 +409,7 @@ struct node *ParseStatement(int type)
 struct node *ParseFor() 
 {
     struct fornode *n ;    /* Holds ptr to the for node to be built and filled */
-    struct cmdnode *LoadNodeTC() ;
+
     BOOL Help=FALSE;
 
     DEBUG((PAGRP, PALVL, "PFOR: Entered.")) ;
@@ -1142,7 +1142,7 @@ struct cmdnode *ParseCond(pcflag)
 unsigned pcflag ;
 {
     struct cmdnode *n ;    /* Ptr to cond node to build and fill   */
-    struct cmdnode *LoadNodeTC() ;
+
 
     DEBUG((PAGRP, PALVL, "PCOND: Entered.")) ;
 
@@ -1770,7 +1770,7 @@ unsigned gtflag ;
 unsigned GeToken(flag)
 unsigned flag ;
 {
-    unsigned Lex() ;
+
 
     if (PendingParens != 0)
         flag = flag | GT_RPOP ;
